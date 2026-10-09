@@ -1107,7 +1107,6 @@ abstract class DoctrineDbalContentGraphProjection
                 $parentNodeAnchorPoint,
                 $childNodeAnchorPoint,
                 $dimensionSpacePoint,
-                $dimensionSpacePoint->hash,
                 $position,
                 $inheritedSubtreeTags,
             );
@@ -1208,7 +1207,6 @@ abstract class DoctrineDbalContentGraphProjection
             $newParent,
             $newChild,
             $dimensionSpacePoint,
-            $dimensionSpacePoint->hash,
             $this->getRelationPosition(
                 $newParent,
                 $newChild,
