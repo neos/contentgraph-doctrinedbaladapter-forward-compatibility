@@ -62,7 +62,8 @@ final class TestingNextDoctrineDbalContentGraphProjectionFactory implements Cont
             ),
             new ProjectionContentGraph(
                 $this->dbal,
-                $tableNames
+                $tableNames,
+                $dimensionSpacePointsRepository
             ),
             $tableNames,
             $dimensionSpacePointsRepository,

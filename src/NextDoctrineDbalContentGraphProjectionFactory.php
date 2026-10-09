@@ -64,7 +64,8 @@ final class NextDoctrineDbalContentGraphProjectionFactory implements ProjectionF
             ),
             new ProjectionContentGraph(
                 $this->dbal,
-                $tableNames
+                $tableNames,
+                $dimensionSpacePointsRepository
             ),
             $tableNames,
             $dimensionSpacePointsRepository,
