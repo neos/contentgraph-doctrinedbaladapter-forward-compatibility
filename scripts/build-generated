@@ -134,6 +134,13 @@ foreach ($originalSources as $originalSourceFile) {
                                         : (bool)$row['hasChanges'],
                                     Version::fromInteger((int)$row['version']),
                                 );
+                        PHP,
+                        <<<'PHP'
+                                return ContentStream::create(
+                                    ContentStreamId::fromString($row['id']),
+                                    isset($row['sourceContentStreamId']) ? ContentStreamId::fromString($row['sourceContentStreamId']) : null,
+                                    Version::fromInteger((int)$row['version']),
+                                );
                         PHP
                     ],
                     [
@@ -146,6 +153,14 @@ foreach ($originalSources as $originalSourceFile) {
                                     $baseWorkspaceName === null
                                         ? false
                                         : (bool)$row['hasChanges'],
+                                );
+                        PHP,
+                        <<<'PHP'
+                                return ContentStream::create(
+                                    ContentStreamId::fromString($row['id']),
+                                    isset($row['sourceContentStreamId']) ? ContentStreamId::fromString($row['sourceContentStreamId']) : null,
+                                    Version::fromInteger((int)$row['version']),
+                                    isClosed: false
                                 );
                         PHP
                     ],

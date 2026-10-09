@@ -191,6 +191,7 @@ final readonly class ContentGraphReadModelAdapter implements ContentGraphReadMod
             ContentStreamId::fromString($row['id']),
             isset($row['sourceContentStreamId']) ? ContentStreamId::fromString($row['sourceContentStreamId']) : null,
             Version::fromInteger((int)$row['version']),
+            isClosed: false
         );
     }
 }
