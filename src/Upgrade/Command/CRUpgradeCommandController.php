@@ -6,11 +6,12 @@ namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Upgrade\Comm
 
 use Doctrine\DBAL\Connection;
 use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Command\CRUpgradeContextFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsConcurrentWorkspaceRebases\EventsConcurrentWorkspaceRebasesUpgrade;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges\EventsDeduplicateBaseWorkspaceChangesUpgrade;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsRecordedAtToUtc\EventsRecordedAtToUtcUpgrade;
 use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared\CRUpgradeContext;
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Neos\ContentRepositoryRegistry\ContentRepositoryRegistry;
-use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsDeduplicateBaseWorkspaceChanges\EventsDeduplicateBaseWorkspaceChangesUpgrade;
-use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\EventsRecordedAtToUtc\EventsRecordedAtToUtcUpgrade;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 
@@ -39,6 +40,89 @@ final class CRUpgradeCommandController extends CommandController
     protected Connection $connection;
 
     /**
+     * Analyses which event upgrades are available and which required
+     *
+     * @param string $contentRepository Identifier of the Content Repository to test for event upgrades
+     */
+    public function eventsStatusCommand(string $contentRepository = 'default'): void
+    {
+        $context = $this->buildContext(
+            ContentRepositoryId::fromString($contentRepository)
+        );
+
+        $noop = function () {
+        };
+
+        $optionalUpgrades = [
+            [
+                strtolower('crupgrade:eventsRecordedAtToUtc'),
+                new EventsRecordedAtToUtcUpgrade($context, $noop)
+            ]
+        ];
+
+        $requiredUpgrades = [
+            [
+                strtolower('crupgrade:eventsDeduplicateBaseWorkspaceChanges'),
+                new EventsDeduplicateBaseWorkspaceChangesUpgrade($context, $noop)
+            ],
+            [
+                strtolower('crupgrade:eventsConcurrentWorkspaceRebases'),
+                new EventsConcurrentWorkspaceRebasesUpgrade($context, $noop)
+            ],
+        ];
+
+        $optionalAvailable = 0;
+        foreach ($optionalUpgrades as [$cliCommandName, $upgrade]) {
+            if ($upgrade->isAvailable()) {
+                if ($optionalAvailable === 0) {
+                    $this->outputLine('Optional migrations:');
+                }
+                $this->outputLine(' - %s', [$upgrade::getShortDescription()]);
+                $this->outputLine('   Run <i>./flow %s</i>', [$cliCommandName]);
+                $this->outputLine();
+                $optionalAvailable++;
+            }
+        }
+
+        $requiredAvailable = 0;
+        foreach ($requiredUpgrades as [$cliCommandName, $upgrade]) {
+            if ($upgrade->isAvailable()) {
+                if ($requiredAvailable === 0) {
+                    $this->outputLine('Required migrations (in order):');
+                }
+                $this->outputLine(' - %s', [$upgrade::getShortDescription()]);
+                $this->outputLine('   Run <i>./flow %s</i>', [$cliCommandName]);
+                $this->outputLine();
+                $requiredAvailable++;
+            }
+        }
+
+        if ($optionalAvailable === 0 && $requiredAvailable === 0) {
+            $this->outputLine('<success>No event upgrades available.</success>');
+            return;
+        }
+
+        $this->outputLine('Note use <i>--dry-run</i> with the upgrades for further details');
+
+        if ($requiredAvailable === 0) {
+            $this->outputLine('<comment>Found %d optional event upgrades available</comment>', [$optionalAvailable]);
+        } else {
+            $this->outputLine('<error>Found %d required%s event upgrades available</error>', [$requiredAvailable, $optionalAvailable ? " and $optionalAvailable optional" : '']);
+        }
+
+        if ($requiredAvailable) {
+            $this->quit(1);
+        }
+    }
+
+    /**
+     * @internal deliberately not copied. In the prepatching we dont need to resetup.
+     */
+    public function resetupAndReplayContentGraphCommand(): void
+    {
+    }
+
+    /**
      * Optional upgrade to adjust event time stamps and node dates to UTC
      *
      * https://github.com/neos/neos-development-collection/pull/5716
@@ -57,13 +141,18 @@ final class CRUpgradeCommandController extends CommandController
      *
      * @param string $contentRepository Identifier of the Content Repository to upgrade
      */
-    public function eventsRecordedAtToUtcCommand(string $contentRepository = 'default', bool $force = false): void
+    public function eventsRecordedAtToUtcCommand(string $contentRepository = 'default', bool $dryRun = false, bool $force = false): void
     {
+        if ($dryRun && $force) {
+            $this->outputLine('<comment>Abort. Cannot force a dry run;)</comment>');
+            return;
+        }
+
         $context = $this->buildContext(
             ContentRepositoryId::fromString($contentRepository)
         );
 
-        if (!$force && !$this->output->askConfirmation(sprintf('> This will rewrite events of content repository "%s" to use UTC dates consistently and backup the original events. This will take even on big sites less than 5 minutes. To have the UTC changes applied to the graph a replay needs to be done which will take quite some time. Are you sure to proceed? (y/n) ', $context->contentRepositoryId->value), false)) {
+        if ((!$dryRun && !$force) && !$this->output->askConfirmation(sprintf('> This will rewrite events of content repository "%s" to use UTC dates consistently and backup the original events. This will take even on big sites less than 5 minutes. To have the UTC changes applied to the graph a replay needs to be done which will take quite some time. Are you sure to proceed? (y/n) ', $context->contentRepositoryId->value), false)) {
             $this->outputLine('<comment>Abort.</comment>');
             return;
         }
@@ -74,7 +163,8 @@ final class CRUpgradeCommandController extends CommandController
         );
 
         $upgrade->execute(
-            force: $force
+            force: $force,
+            dryRun: $dryRun,
         );
     }
 
@@ -121,6 +211,60 @@ final class CRUpgradeCommandController extends CommandController
         }
 
         $upgrade = new EventsDeduplicateBaseWorkspaceChangesUpgrade(
+            $context,
+            $this->output->outputLine(...)
+        );
+
+        $upgrade->execute(
+            dryRun: $dryRun
+        );
+    }
+
+    /**
+     * Upgrade to deduplicate illegal concurrent workspace rebases
+     *
+     * https://github.com/neos/neos-development-collection/issues/5849
+     *
+     * Content stream forking was not thread safe before not expressing the assertion to the source content stream
+     * e.g. that the sourceContentStreamVersion should match the reality in the event store.
+     * This resulted in the possibility that a source content stream was not constraint from being forked when it was already removed.
+     * The resulting illegal ContentStreamWasForked event and its RebaseWorkspace sequence must be removed.
+     *
+     * The upgrade first determines any ContentStreamWasForked events where the source content stream was already removed via ContentStreamWasRemoved.
+     * We assume all illegally found forks are restricted to being caused by a RebaseWorkspace command (via correlation id).
+     * Further we expect a simple RebaseWorkspace without any changes on the "user" workspace but just an empty fork.
+     * On this empty fork we expect only a new second RebaseWorkspace, starting with a ContentStreamWasClosed or nothing if the event stream ended.
+     * This second RebaseWorkspace is either also illegal and to be removed or a valid rebase if the source content stream existed at that point.
+     * If valid we want to keep this rebase, but a rebase sequence refers to its previous content stream to remove it and indicate projections which was the last.
+     * The original information is no longer valid as we have removed the existence of the original previous content stream.
+     * Instead, we need to patch the events to use the previous content stream of the first illegal fork - the previous-previous content stream.
+     * Thus, we patch the field $previousContentStreamId of the WorkspaceWasRebased event and rewrite the ContentStreamWasClosed
+     * and ContentStreamWasRemoved events to affect the now new last content stream.
+     *
+     * After the migration is applied the workspace will have its last successfully rebased content stream as without the migration,
+     * but we deduplicated any temporary illegal rebases that happened in a race condition. No content on the workspaces is affected.
+     *
+     * Included in July 2026 - part of the minor 9.2.0 release
+     *
+     * @param string $contentRepository Identifier of the Content Repository to migrate
+     */
+    public function eventsConcurrentWorkspaceRebasesCommand(string $contentRepository = 'default', bool $dryRun = false, bool $force = false): void
+    {
+        if ($dryRun && $force) {
+            $this->outputLine('<comment>Abort. Cannot force a dry run;)</comment>');
+            return;
+        }
+
+        $context = $this->buildContext(
+            ContentRepositoryId::fromString($contentRepository)
+        );
+
+        if ((!$dryRun && !$force) && !$this->output->askConfirmation(sprintf('> This will rewrite events of content repository "%s" to remove duplicated rebase workspaces and backup the original events. This will take even on big sites less than 5 minutes. Are you sure to proceed? (y/n) ', $context->contentRepositoryId->value), false)) {
+            $this->outputLine('<comment>Abort.</comment>');
+            return;
+        }
+
+        $upgrade = new EventsConcurrentWorkspaceRebasesUpgrade(
             $context,
             $this->output->outputLine(...)
         );
