@@ -31,7 +31,7 @@ use Neos\Flow\Cli\CommandController;
  *
  * Please do ensure you have a backup of your database at hand.
  */
-final class CRUpgradeCommandController extends CommandController
+final class CRForwardUpgradeCommandController extends CommandController
 {
     #[Flow\Inject]
     protected ContentRepositoryRegistry $contentRepositoryRegistry;
@@ -55,18 +55,18 @@ final class CRUpgradeCommandController extends CommandController
 
         $optionalUpgrades = [
             [
-                strtolower('crupgrade:eventsRecordedAtToUtc'),
+                strtolower('crforwardupgrade:eventsRecordedAtToUtc'),
                 new EventsRecordedAtToUtcUpgrade($context, $noop)
             ]
         ];
 
         $requiredUpgrades = [
             [
-                strtolower('crupgrade:eventsDeduplicateBaseWorkspaceChanges'),
+                strtolower('crforwardupgrade:eventsDeduplicateBaseWorkspaceChanges'),
                 new EventsDeduplicateBaseWorkspaceChangesUpgrade($context, $noop)
             ],
             [
-                strtolower('crupgrade:eventsConcurrentWorkspaceRebases'),
+                strtolower('crforwardupgrade:eventsConcurrentWorkspaceRebases'),
                 new EventsConcurrentWorkspaceRebasesUpgrade($context, $noop)
             ],
         ];
