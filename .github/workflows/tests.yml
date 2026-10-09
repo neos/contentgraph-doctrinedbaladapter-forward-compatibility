@@ -84,6 +84,8 @@ jobs:
 
       - name: Prepare Neos distribution
         run: |
+          git clone --depth 1 --branch 9.2 https://github.com/neos/neos-development-collection.git ../Neos_92_Sources
+
           git clone --depth 1 --branch ${{ matrix.neos-version }} https://github.com/neos/neos-development-distribution.git ${FLOW_PATH_ROOT}
           cd ${FLOW_PATH_ROOT}
           
@@ -173,7 +175,7 @@ jobs:
         run: |
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow testingcontentgraphprojection:validatecontentrepository default
-          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure
+          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/Features -vvv --stop-on-failure
 
       - name: Show log on failure
         if: ${{ failure()  }}
