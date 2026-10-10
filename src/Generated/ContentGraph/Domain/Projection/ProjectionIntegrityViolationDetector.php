@@ -13,14 +13,14 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphTableNames;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\HierarchyRelationSubquery;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\SqlTableSubqueryFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\ContentGraphTableNames;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\HierarchyRelationSubquery;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\SqlTableSubqueryFactory;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePointSet;
 use Neos\ContentRepository\Core\Projection\ContentGraph\ProjectionIntegrityViolationDetectorInterface;

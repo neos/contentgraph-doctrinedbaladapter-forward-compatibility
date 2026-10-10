@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility;
 
 use Neos\ContentRepository\Core\Projection\ContentGraph\ContentGraphReadModelInterface;
 use Neos\ContentRepository\Core\Projection\ProjectionStateInterface;

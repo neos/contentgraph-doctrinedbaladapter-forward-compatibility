@@ -3,13 +3,11 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
-use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\FindRootNodeAggregatesFilter;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\NodeType\ExpandedNodeTypeCriteria;
 use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\PropertyValue\Criteria\AndCriteria;
@@ -28,8 +26,8 @@ use Neos\ContentRepository\Core\Projection\ContentGraph\Filter\SearchTerm\Search
 use Neos\ContentRepository\Core\SharedModel\Id\UuidFactory;
 use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateId;
 use Neos\ContentRepository\Core\SharedModel\Node\PropertyName;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\DbalSchemaFactory;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query\QueryBuilder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\DbalSchemaFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query\QueryBuilder;
 
 /**
  * @internal Implementation detail of the DoctrineDbalAdapter

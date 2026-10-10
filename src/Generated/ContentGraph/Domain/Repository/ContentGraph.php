@@ -13,16 +13,16 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphTableNames;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\HierarchyRelationSubquery;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\NodeAggregateIdCondition;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\NodeQueryBuilder;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\SqlTableSubqueryFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\ContentGraphTableNames;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\HierarchyRelationSubquery;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\NodeAggregateIdCondition;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\NodeQueryBuilder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\SqlTableSubqueryFactory;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePointSet;
 use Neos\ContentRepository\Core\DimensionSpace\OriginDimensionSpacePoint;
@@ -43,8 +43,8 @@ use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateIds;
 use Neos\ContentRepository\Core\SharedModel\Node\NodeName;
 use Neos\ContentRepository\Core\SharedModel\Workspace\ContentStreamId;
 use Neos\ContentRepository\Core\SharedModel\Workspace\WorkspaceName;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query\QueryBuilder;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query\StaticWhereCondition;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query\QueryBuilder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query\StaticWhereCondition;
 
 /**
  * The Doctrine DBAL adapter content graph
@@ -213,7 +213,7 @@ final class ContentGraph implements ContentGraphInterface
             'ancestry'
         );
 
-        return NodeAggregateIds::fromArray(array_map(fn(array $row) => NodeAggregateId::fromString($row['nodeAggregateId']), $nodeAggregateIdRows));
+        return NodeAggregateIds::fromArray(array_map(fn (array $row) => NodeAggregateId::fromString($row['nodeAggregateId']), $nodeAggregateIdRows));
     }
 
     public function findChildNodeAggregates(

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Testing;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphReadModelAdapter;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\ContentGraphTableNames;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\DimensionSpacePointsRepository;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ProjectionContentGraph;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\MysqlPlatformContentRepositoryLocker;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\ContentGraphReadModelAdapter;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\ContentGraphTableNames;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\ContentStreamLayerFinder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\DimensionSpacePointsRepository;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\ProjectionContentGraph;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\MysqlPlatformContentRepositoryLocker;
 use Neos\ContentRepository\Core\Factory\SubscriberFactoryDependencies;
 use Neos\ContentRepository\Core\Projection\ContentGraph\ContentGraphProjectionFactoryInterface;
 
@@ -62,7 +62,8 @@ final class TestingNextDoctrineDbalContentGraphProjectionFactory implements Cont
             ),
             new ProjectionContentGraph(
                 $this->dbal,
-                $tableNames
+                $tableNames,
+                $dimensionSpacePointsRepository
             ),
             $tableNames,
             $dimensionSpacePointsRepository,

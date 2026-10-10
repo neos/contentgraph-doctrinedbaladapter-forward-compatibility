@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Tests\Functional;
 
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NextDoctrineDbalContentGraphProjectionReadModel;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\NextDoctrineDbalContentGraphProjectionReadModel;
 use Neos\ContentRepository\Core\Feature\WorkspaceCreation\Command\CreateRootWorkspace;
 use Neos\ContentRepository\Core\Projection\ProjectionStatus;
 use Neos\ContentRepository\Core\SharedModel\Workspace\ContentStreamId;
@@ -84,7 +84,7 @@ class RenameTablesMigrationTest extends AbstractContentRepositoryProjectionTestC
               catchUpHooks: {}
             projections:
               "contentGraph_92":
-                factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NextDoctrineDbalContentGraphProjectionFactory
+                factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\NextDoctrineDbalContentGraphProjectionFactory
         YAML);
 
         $this->eventStore->setup();

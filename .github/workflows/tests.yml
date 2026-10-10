@@ -93,8 +93,8 @@ jobs:
 
           composer config --no-plugins allow-plugins.neos/composer-plugin true
           
-          composer config repositories.package '{ "type": "path", "url": "../contentgraph-doctrinedbaladapter-compatibility", "options": { "symlink": false } }'
-          composer require --no-update --no-interaction neos/contentgraph-doctrinedbaladapter-compatibility:@dev
+          composer config repositories.package '{ "type": "path", "url": "../contentgraph-doctrinedbaladapter-forward-compatibility", "options": { "symlink": false } }'
+          composer require --no-update --no-interaction neos/contentgraph-doctrinedbaladapter-forward-compatibility:@dev
           
           composer require --dev --no-update --no-interaction phpstan/phpstan:^1.10
 
@@ -105,13 +105,13 @@ jobs:
 
       - name: Linting
         run: |
-          cd ${FLOW_PATH_ROOT}/Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility
+          cd ${FLOW_PATH_ROOT}/Packages/Application/Neos.ContentGraph.DoctrineDbalAdapterForwardCompatibility
           composer run lint:phpstan
 
       # - name: Run Unit tests
       #   run: |
       #     cd ${FLOW_PATH_ROOT}
-      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Unit
+      #     bin/phpunit -c Build/BuildEssentials/PhpUnit/UnitTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapterForwardCompatibility/Tests/Unit
 
       - name: Setup Flow configuration
         run: |
@@ -141,7 +141,7 @@ jobs:
               presets:
                 default:
                   contentGraphProjection:
-                    factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
+                    factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
                   projections:
                     contentGraph_92: ~
           EOF
@@ -152,7 +152,7 @@ jobs:
             factoryObjectName: 'Neos\ContentRepositoryRegistry\Infrastructure\GenericObjectFactory'
             arguments:
               1:
-                value: 'Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalProjectionIntegrityViolationDetectionRunnerFactory'
+                value: 'Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\DoctrineDbalProjectionIntegrityViolationDetectionRunnerFactory'
               2:
                 object: 'Doctrine\DBAL\Connection'
 
@@ -161,13 +161,19 @@ jobs:
       - name: Run Functional tests
         run: |
           cd ${FLOW_PATH_ROOT}
-          bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapter.Compatibility/Tests/Functional
+          bin/phpunit -c Build/BuildEssentials/PhpUnit/FunctionalTests.xml Packages/Application/Neos.ContentGraph.DoctrineDbalAdapterForwardCompatibility/Tests/Functional
 
       - name: Run doctrine migrate
         # prevent db transaction in connection from being closed by migrating in advance
         run: |
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow doctrine:migrate --quiet
+
+      - name: Apply patch to skip behat test, testing in 9.2 removed content stream closing
+        run: |
+          ABSOLUTE_ROOT=$(realpath $FLOW_PATH_ROOT)
+          cd ${FLOW_PATH_ROOT}/Packages/Neos
+          git apply ${ABSOLUTE_ROOT}/Packages/Application/Neos.ContentGraph.DoctrineDbalAdapterForwardCompatibility/Tests/behaviourTestsContentStreamClosing.patch
 
       - name: Run behat Neos.ContentRepository.BehavioralTests tests with new graph projection
         run: |

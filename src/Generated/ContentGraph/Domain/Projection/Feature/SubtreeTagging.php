@@ -3,20 +3,19 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\Feature;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\Feature;
 
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Platforms\MariaDBPlatform;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\ContentStreamLayers;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\NodeRelationAnchorPoint;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\NodeFactory;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePoint;
 use Neos\ContentRepository\Core\DimensionSpace\DimensionSpacePointSet;
 use Neos\ContentRepository\Core\Feature\SubtreeTagging\Dto\SubtreeTag;
 use Neos\ContentRepository\Core\Projection\ContentGraph\NodeTags;
 use Neos\ContentRepository\Core\SharedModel\Node\NodeAggregateId;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query\StaticWhereCondition;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query\StaticWhereCondition;
 
 /**
  * The subtree tagging projection feature trait
@@ -230,6 +229,7 @@ trait SubtreeTagging
     private function moveSubtreeTags(ContentStreamLayers $contentStreamLayers, NodeAggregateId $newParentNodeAggregateId, DimensionSpacePoint $coveredDimensionSpacePoint): void
     {
         $hierarchyRelationQuery = $this->subqueries->forHierarchyRelation($contentStreamLayers)->withDimensionSpacePoint($coveredDimensionSpacePoint);
+        // Mysql hack (NO_MERGE), too eager to optimize https://dev.mysql.com/doc/refman/8.4/en/derived-table-optimization.html
         $moveSubtreeTagsStatement = <<<SQL
             INSERT INTO {$this->tableNames->hierarchyRelation()} (
               id, parentnodeanchor, childnodeanchor,
@@ -247,6 +247,7 @@ trait SubtreeTagging
             FROM
               (
                 SELECT
+                  /*+ NO_MERGE(r) */
                   h.id,
                   h.parentnodeanchor,
                   h.childnodeanchor,
@@ -302,8 +303,6 @@ trait SubtreeTagging
             ON DUPLICATE KEY UPDATE subtreetags = VALUES(subtreetags)
             SQL;
         try {
-            // Mysql hack, too eager to optimize https://dev.mysql.com/doc/refman/8.4/en/derived-table-optimization.html
-            $this->dbal->executeQuery('set optimizer_switch="derived_merge=off"');
             $this->dbal->executeStatement($moveSubtreeTagsStatement, [
                 'newParentNodeAggregateId' => $newParentNodeAggregateId->value,
                 'targetContentStreamLayer' => $contentStreamLayers->getWriteLayer()->value,

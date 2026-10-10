@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Upgrade\Shared;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Upgrade\Shared;
 
 /**
  * @internal CR upgrade internals

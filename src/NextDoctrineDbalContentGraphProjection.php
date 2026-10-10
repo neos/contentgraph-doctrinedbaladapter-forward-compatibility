@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility;
 
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjection;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\DoctrineDbalContentGraphProjection;
 use Neos\ContentRepository\Core\Projection\ProjectionInterface;
 
 /**

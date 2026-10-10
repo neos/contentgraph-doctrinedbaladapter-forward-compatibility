@@ -1,9 +1,9 @@
 {
-  "name": "neos/contentgraph-doctrinedbaladapter-compatibility",
+  "name": "neos/contentgraph-doctrinedbaladapter-forward-compatibility",
   "type": "neos-package",
-  "description": "Compatibility layer to allow smooth upgrades to Neos version which provide a new content graph implementation.",
+  "description": "Forward compatibility layer to allow smooth upgrades to Neos version which provide a new content graph implementation.",
   "support": {
-    "source": "https://github.com/neos/contentgraph-doctrinedbaladapter-compatibility",
+    "source": "https://github.com/neos/contentgraph-doctrinedbaladapter-forward-compatibility",
     "forum": "https://discuss.neos.io/",
     "docs": "https://docs.neos.io/"
   },
@@ -17,14 +17,14 @@
   },
   "require": {
     "php": ">= 8.2",
-    "neos/contentrepository-core": "~9.0 || ~9.1",
-    "neos/contentrepositoryregistry": "~9.0 || ~9.1",
+    "neos/contentrepository-core": "~9.0.0 || ~9.1.0",
+    "neos/contentrepositoryregistry": "~9.0.0 || ~9.1.0",
     "doctrine/dbal": "^3.1.4",
     "doctrine/migrations": "*"
   },
   "autoload": {
     "psr-4": {
-      "Neos\\ContentGraph\\DoctrineDbalAdapter\\Compatibility\\": "src"
+      "Neos\\ContentGraph\\DoctrineDbalAdapterForwardCompatibility\\": "src"
     }
   }
 }

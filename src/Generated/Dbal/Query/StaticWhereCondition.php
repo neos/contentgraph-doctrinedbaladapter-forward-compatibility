@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\Query;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Query;
 
 /**
  * Utility to compose ad-hoc where conditions.

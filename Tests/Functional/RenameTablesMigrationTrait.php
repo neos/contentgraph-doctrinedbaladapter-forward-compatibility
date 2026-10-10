@@ -1,9 +1,9 @@
 <?php
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Tests\Functional;
 
 use Doctrine\DBAL\Connection;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Schema\Command\RenameContentGraphTablesMigrationBuilder;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Schema\Command\RenameContentGraphTablesMigrationBuilder;
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 use Psr\Log\LoggerInterface;
 

@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;

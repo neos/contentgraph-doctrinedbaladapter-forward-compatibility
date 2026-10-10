@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
@@ -13,7 +13,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\Dbal\DbalSchemaFactory;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\DbalSchemaFactory;
 
 /**
  * @internal
@@ -79,7 +79,7 @@ class DoctrineDbalContentGraphSchemaBuilder
             ->addIndex(['contentstreamlayer'])
             ->addIndex(['parentnodeanchor'])
             ->addIndex(['position'])
-            /** Optimize the $rightmostSucceedingSiblingRelationStatement in {@see \Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Repository\ProjectionContentGraph::determineHierarchyRelationPosition()} */
+            /** Optimize the $rightmostSucceedingSiblingRelationStatement in {@see \Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Repository\ProjectionContentGraph::determineHierarchyRelationPosition()} */
             ->addIndex(['parentnodeanchor', 'position'])
             ->addIndex(['childnodeanchor', 'contentstreamlayer', 'dimensionspacepointhash', 'position'])
             ->addIndex(['parentnodeanchor', 'contentstreamlayer', 'dimensionspacepointhash', 'position'])
@@ -133,7 +133,6 @@ class DoctrineDbalContentGraphSchemaBuilder
             (new Column('version', Type::getType(Types::INTEGER)))->setNotnull(true),
             DbalSchemaFactory::columnForContentStreamId('sourceContentStreamId', $platform)->setNotnull(false),
             (new Column('sourceContentStreamVersion', Type::getType(Types::INTEGER)))->setNotnull(false),
-            (new Column('closed', Type::getType(Types::BOOLEAN)))->setNotnull(true),
             (new Column('hasChanges', Type::getType(Types::BOOLEAN)))->setNotnull(true),
         ]);
 

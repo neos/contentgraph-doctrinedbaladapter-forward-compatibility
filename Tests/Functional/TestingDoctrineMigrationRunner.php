@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Tests\Functional;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\Migrations\AbstractMigration;

@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph;
 
 use Neos\ContentRepository\Core\SharedModel\ContentRepository\ContentRepositoryId;
 
@@ -18,7 +18,6 @@ final readonly class ContentGraphTableNames
     ) {
     }
 
-    /** Creates the original table prefix for testing */
     public static function create(ContentRepositoryId $contentRepositoryId): self
     {
         return new self(sprintf('cr_%s_p_graph', $contentRepositoryId->value));

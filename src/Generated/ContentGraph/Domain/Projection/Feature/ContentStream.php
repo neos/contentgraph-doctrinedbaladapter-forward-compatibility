@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Generated\ContentGraph\Domain\Projection\Feature;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\ContentGraph\Domain\Projection\Feature;
 
 use Neos\ContentRepository\Core\SharedModel\Workspace\ContentStreamId;
 use Neos\EventStore\Model\Event\Version;
@@ -22,26 +22,7 @@ trait ContentStream
             'version' => 0,
             'sourceContentStreamId' => $sourceContentStreamId?->value,
             'sourceContentStreamVersion' => $sourceVersion?->value,
-            'closed' => 0,
             'hasChanges' => 0
-        ]);
-    }
-
-    private function closeContentStream(ContentStreamId $contentStreamId): void
-    {
-        $this->dbal->update($this->tableNames->contentStream(), [
-            'closed' => 1,
-        ], [
-            'id' => $contentStreamId->value
-        ]);
-    }
-
-    private function reopenContentStream(ContentStreamId $contentStreamId): void
-    {
-        $this->dbal->update($this->tableNames->contentStream(), [
-            'closed' => 0,
-        ], [
-            'id' => $contentStreamId->value
         ]);
     }
 

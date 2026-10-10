@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Tests\Functional;
+namespace Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Tests\Functional;
 
-use Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NextDoctrineDbalContentGraphProjectionReadModel;
+use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\NextDoctrineDbalContentGraphProjectionReadModel;
 use Neos\ContentRepository\Core\Feature\WorkspaceCreation\Command\CreateRootWorkspace;
 use Neos\ContentRepository\Core\Feature\WorkspaceCreation\Command\CreateWorkspace;
 use Neos\ContentRepository\Core\Projection\ProjectionStatus;
@@ -104,7 +104,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
               catchUpHooks: {}
             projections:
               "contentGraph_92":
-                factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\NextDoctrineDbalContentGraphProjectionFactory
+                factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\NextDoctrineDbalContentGraphProjectionFactory
         YAML);
 
         $newContentGraphSubscriptionStatus = $this->subscriptionEngine->subscriptionStatus(SubscriptionEngineCriteria::create(['contentGraph_92']))->first();
@@ -220,7 +220,7 @@ final class SwitchOldToNewProjectionTest extends AbstractContentRepositoryProjec
             propertyConverters: {}
             contentGraphProjection:
               # note this part of the test is not entirely correct and reflects real world, as we intent that the user installs Neos 9.2 and renames the tables - this testing projection should not be used
-              factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapter\Compatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
+              factoryObjectName: Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Testing\TestingNextDoctrineDbalContentGraphProjectionFactory
               catchUpHooks: {}
         YAML);
 
