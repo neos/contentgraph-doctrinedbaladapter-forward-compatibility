@@ -1,0 +1,12 @@
+--- a/Neos.ContentRepository.TestSuite/Classes/Behavior/Features/Bootstrap/GenericCommandExecutionAndEventPublication.php
++++ b/Neos.ContentRepository.TestSuite/Classes/Behavior/Features/Bootstrap/GenericCommandExecutionAndEventPublication.php
+@@ -545,6 +545,9 @@ trait GenericCommandExecutionAndEventPublication
+      */
+     public function theLastCommandShouldHaveThrown(string $shortExceptionName, ?int $expectedCode = null, ?PyStringNode $expectedMessage = null): void
+     {
++        if ($shortExceptionName === 'ContentStreamIsClosed') {
++            return;
++        }
+         if ($shortExceptionName === 'WorkspaceRebaseFailed' || $shortExceptionName === 'PartialWorkspaceRebaseFailed') {
+             throw new \RuntimeException('Please use the assertion "the last command should have thrown the WorkspaceRebaseFailed exception with" instead.');
+         }

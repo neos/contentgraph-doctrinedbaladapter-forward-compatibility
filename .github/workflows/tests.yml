@@ -84,8 +84,6 @@ jobs:
 
       - name: Prepare Neos distribution
         run: |
-          git clone --depth 1 --branch 9.2 https://github.com/neos/neos-development-collection.git ../Neos_92_Sources
-
           git clone --depth 1 --branch ${{ matrix.neos-version }} https://github.com/neos/neos-development-distribution.git ${FLOW_PATH_ROOT}
           cd ${FLOW_PATH_ROOT}
           
@@ -171,15 +169,17 @@ jobs:
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow doctrine:migrate --quiet
 
+      - name: Apply patch to skip behat test, testing in 9.2 removed content stream closing
+        run: |
+          ABSOLUTE_ROOT=$(realpath $FLOW_PATH_ROOT)
+          cd ${FLOW_PATH_ROOT}/Packages/Neos
+          git apply ${ABSOLUTE_ROOT}/Packages/Application/Neos.ContentGraph.DoctrineDbalAdapterForwardCompatibility/Tests/behaviourTestsContentStreamClosing.patch
+
       - name: Run behat Neos.ContentRepository.BehavioralTests tests with new graph projection
         run: |
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow testingcontentgraphprojection:validatecontentrepository default
-
-          # skips test from https://github.com/neos/neos-development-collection/pull/5913 which dont pass pre Neos 9.2 as we dont use the test controlled clock but _now_
-          rm ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/Features/02-NodeCreation/05-CreateNodeAggregateWithNode_ComplexDefaultAndInitialProperties.feature
-  
-          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure
+          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure
 
       - name: Show log on failure
         if: ${{ failure()  }}
