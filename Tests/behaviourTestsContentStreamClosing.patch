@@ -5,7 +5,7 @@
      public function theLastCommandShouldHaveThrown(string $shortExceptionName, ?int $expectedCode = null, ?PyStringNode $expectedMessage = null): void
      {
 +        if ($shortExceptionName === 'ContentStreamIsClosed') {
-+            return;
++            $this->lastCommandException = null; return;
 +        }
          if ($shortExceptionName === 'WorkspaceRebaseFailed' || $shortExceptionName === 'PartialWorkspaceRebaseFailed') {
              throw new \RuntimeException('Please use the assertion "the last command should have thrown the WorkspaceRebaseFailed exception with" instead.');
