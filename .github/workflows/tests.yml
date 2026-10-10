@@ -175,7 +175,11 @@ jobs:
         run: |
           cd ${FLOW_PATH_ROOT}
           FLOW_CONTEXT=Testing/Behat ./flow testingcontentgraphprojection:validatecontentrepository default
-          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c Packages/Neos/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/Features -vvv --stop-on-failure
+
+          # skips test from https://github.com/neos/neos-development-collection/pull/5913 which dont pass pre Neos 9.2 as we dont use the test controlled clock but _now_
+          rm ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/Features/02-NodeCreation/05-CreateNodeAggregateWithNode_ComplexDefaultAndInitialProperties.feature
+  
+          FLOW_CONTEXT=Testing/Behat bin/behat -f progress --strict --no-interaction -c ../Neos_92_Sources/Neos.ContentRepository.BehavioralTests/Tests/Behavior/behat.yml.dist -vvv --stop-on-failure
 
       - name: Show log on failure
         if: ${{ failure()  }}
