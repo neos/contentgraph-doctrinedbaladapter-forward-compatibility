@@ -80,7 +80,7 @@ use Neos\ContentGraph\DoctrineDbalAdapterForwardCompatibility\Generated\Dbal\Que
  *            WHERE hWin.id = h.id AND hWin.layer IN L AND hWin.layer > h.layer)
  *
  * The NOT EXISTS form stays flat and mergeable, lets the optimizer push predicates and use the
- * `UNIQ_id_layer (id, contentstreamlayer)` index, and avoids materialization on both MySQL and MariaDB.
+ * `PRIMARY (id, contentstreamlayer)` index, and avoids materialization on both MySQL and MariaDB.
  *
  *
  * Optimisation: Pre-filtering
